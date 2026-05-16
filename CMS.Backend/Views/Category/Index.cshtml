@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CMS.Data.Entities.Category>
+@* Khai báo View nhận danh sách Category *@
+
+<div class="container mt-4">
+    @* Khung chứa nội dung, có khoảng cách phía trên *@
+
+    <h2 class="text-primary">DANH SÁCH DANH MỤC</h2>
+    @* Tiêu đề trang danh sách danh mục *@
+
+    <table class="table table-bordered table-hover mt-3">
+        @* Bảng hiển thị danh sách danh mục *@
+
+        <thead class="table-light">
+            @* Phần tiêu đề của bảng *@
+
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @* Duyệt từng danh mục trong Model *@
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @* Hiển thị mã danh mục *@
+                    <td>@item.Id</td>
+
+                    @* Hiển thị tên danh mục *@
+                    <td>@item.Name</td>
+
+                    @* Hiển thị mô tả danh mục *@
+                    <td>@item.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

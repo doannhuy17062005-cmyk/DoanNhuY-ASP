@@ -1,0 +1,61 @@
+﻿@model CMS.Data.Entities.Post
+@* Khai báo View nhận một đối tượng Post *@
+
+<div class="container mt-5">
+    @* Khung chứa nội dung chi tiết bài viết *@
+
+    <nav aria-label="breadcrumb">
+        @* Thanh điều hướng breadcrumb *@
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Post">Danh sách bài viết</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Chi tiết bài viết
+            </li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        @* Căn nội dung ra giữa trang *@
+
+        <div class="col-md-10">
+            @* Khung nội dung rộng 10 cột *@
+
+            <h1 class="display-4 fw-bold text-primary">
+                @Model.Title
+            </h1>
+            @* Hiển thị tiêu đề bài viết *@
+
+            <p class="text-muted">
+                Đăng ngày: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+            </p>
+            @* Hiển thị ngày đăng bài viết *@
+
+            <hr />
+
+            <div class="text-center mb-4">
+                @* Hiển thị hình ảnh bài viết *@
+
+                <img src="@Model.ImageUrl"
+                     class="img-fluid rounded shadow"
+                     alt="Post Image"
+                     style="width: 100%;">
+            </div>
+
+            <div class="post-content fs-5">
+                @Model.Content
+            </div>
+            @* Hiển thị nội dung bài viết *@
+
+            <div class="mt-5 border-top pt-3">
+                @* Nút quay lại danh sách bài viết *@
+
+                <a href="/Post" class="btn btn-secondary">
+                    Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

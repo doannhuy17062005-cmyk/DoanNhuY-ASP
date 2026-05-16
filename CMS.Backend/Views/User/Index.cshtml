@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CMS.Data.Entities.User>
+@* Khai báo View nhận danh sách người dùng *@
+
+<div class="container mt-4">
+    @* Khung chứa nội dung trang quản lý thành viên *@
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        @* Hàng chứa tiêu đề và nút thêm thành viên *@
+
+        <h2 class="text-dark">QUẢN LÝ THÀNH VIÊN</h2>
+        @* Tiêu đề trang *@
+
+        <button class="btn btn-success btn-sm">+ Thêm thành viên mới</button>
+        @* Nút thêm thành viên mới *@
+    </div>
+
+    <table class="table table-hover shadow-sm border">
+        @* Bảng hiển thị danh sách thành viên *@
+
+        <thead class="table-light">
+            @* Phần tiêu đề bảng *@
+
+            <tr>
+                <th>ID</th>
+                <th>Tên đăng nhập</th>
+                <th>Họ và tên</th>
+                <th>Quyền hạn</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @* Duyệt từng người dùng trong Model *@
+            @foreach (var user in Model)
+            {
+                <tr>
+                    @* Hiển thị mã người dùng *@
+                    <td>@user.Id</td>
+
+                    <td>
+                        @* Hiển thị tên đăng nhập *@
+                        <strong>@user.Username</strong>
+                    </td>
+
+                    @* Hiển thị họ tên người dùng *@
+                    <td>@user.FullName</td>
+
+                    <td>
+                        @* Hiển thị quyền hạn theo từng vai trò *@
+                        @if (user.Role == "Administrator")
+                        {
+                            <span class="badge bg-danger">@user.Role</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info text-dark">@user.Role</span>
+                        }
+                    </td>
+
+                    <td>
+                        @* Nút thao tác sửa và xóa *@
+                        <button class="btn btn-sm btn-outline-warning">Sửa</button>
+                        <button class="btn btn-sm btn-outline-danger">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
