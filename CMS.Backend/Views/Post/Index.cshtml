@@ -1,49 +1,62 @@
 ﻿@model IEnumerable<CMS.Data.Entities.Post>
-@* Khai báo View nhận danh sách bài viết *@
+@{
+    ViewData["Title"] = "Danh sách bài viết";
+}
 
 <div class="container mt-4">
-    @* Khung chứa nội dung danh sách bài viết *@
-
-    <h2 class="mb-4 text-danger">DANH SÁCH BÀI VIẾT MỚI NHẤT</h2>
-    @* Tiêu đề trang *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">Danh Sách Bài Viết</h2>
+        <a href="#" class="btn btn-success btn-sm px-3 py-2 fw-semibold">
+            <i class="bi bi-plus-circle"></i> + Thêm bài viết mới
+        </a>
+    </div>
 
     <div class="row">
-        @* Tạo hàng để hiển thị các bài viết dạng card *@
-
-        @foreach (var item in Model)
+        @if (Model != null && Model.Any())
         {
-            @* Duyệt từng bài viết trong danh sách *@
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="Thumbnail" style="height: 200px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/350x200?text=No+Image'">
 
-            <div class="col-md-4 mb-3">
-                @* Mỗi bài viết chiếm 4 cột trên màn hình medium trở lên *@
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                @if (item.Category != null)
+                                {
+                                    <span class="badge bg-info text-dark px-2.5 py-1.5 fw-semibold">@item.Category.Name</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary text-white px-2.5 py-1.5">Không rõ danh mục</span>
+                                }
+                            </div>
 
-                <div class="card shadow-sm">
-                    @* Khung card hiển thị bài viết *@
+                            <h5 class="card-title text-primary fw-bold mb-2 text-truncate" title="@item.Title">@item.Title</h5>
 
-                    <img src="@item.ImageUrl" class="card-img-top" alt="Thumbnail">
-                    @* Hiển thị ảnh đại diện bài viết *@
+                            <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @item.Content
+                            </p>
 
-                    <div class="card-body">
-                        @* Phần nội dung bên trong card *@
+                            <p class="text-secondary small mb-3">
+                                <i class="bi bi-calendar3"></i> Ngày đăng: @item.CreatedDate.ToString("dd/MM/yyyy")
+                            </p>
 
-                        <h5 class="card-title text-primary">@item.Title</h5>
-                        @* Hiển thị tiêu đề bài viết *@
-
-                        <p class="card-text text-truncate">
-                            @item.Content
-                        </p>
-                        @* Hiển thị nội dung tóm tắt bài viết *@
-
-                        <p class="text-muted small">
-                            Ngày đăng: @item.CreatedDate.ToString("dd/MM/yyyy")
-                        </p>
-                        @* Hiển thị ngày đăng bài viết *@
-
-                        <a href="/Post/Details/@item.Id" class="btn btn-outline-primary btn-sm">
-                            Xem chi tiết
-                        </a>
-                        @* Nút chuyển sang trang chi tiết bài viết *@
+                            <div class="d-flex gap-1 mt-auto">
+                                <a asp-controller="Post" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm px-2">Xem chi tiết</a>
+                                <a href="#" class="btn btn-outline-warning btn-sm px-2">Sửa</a>
+                                <a href="#" class="btn btn-outline-danger btn-sm px-2">🗑 Xóa</a>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    Hệ thống chưa có bài viết nào được nạp dữ liệu.
                 </div>
             </div>
         }
