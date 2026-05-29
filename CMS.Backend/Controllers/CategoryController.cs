@@ -1,34 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CMS.Data.Entities;
-using System.Collections.Generic;
+﻿using CMS.Data;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CMS.Backend.Controllers
+public class CategoryController : Controller
 {
-    // Controller xử lý chức năng danh mục
-    public class CategoryController : Controller
-    {
-        // Action hiển thị danh sách danh mục
-        public IActionResult Index()
-        {
-            // Tạo danh sách danh mục mẫu
-            var list = new List<Category>
-            {
-                new Category
-                {
-                    Id = 1,
-                    Name = "Tin Công Nghệ",
-                    Description = "Review Laptop, AI"
-                },
-                new Category
-                {
-                    Id = 2,
-                    Name = "Giáo Dục",
-                    Description = "Thông tin tuyển sinh"
-                }
-            };
+    private readonly ApplicationDbContext _context;
 
-            // Trả dữ liệu danh mục sang View
-            return View(list);
-        }
+    // "Tiêm" kết nối vào Controller
+    public CategoryController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public IActionResult Index()
+    {
+        // Lấy dữ liệu THẬT từ bảng Categories trong SQL
+        var data = _context.Categories.ToList();
+        return View(data);
     }
 }
