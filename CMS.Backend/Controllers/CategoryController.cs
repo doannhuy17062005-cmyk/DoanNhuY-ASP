@@ -1,17 +1,12 @@
-﻿/* Sinh viên: Đoàn Như Ý
-* MSSV: 2123110511
-* Lớp: CCQ2311M
-* Ngày sửa: 29/05/2026
-* Mô tả: Tích hợp đầy đủ tính năng hiển thị danh sách, thêm mới, xóa có ràng buộc và cập nhật dữ liệu (Update) cho Danh mục
-*/
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using CMS.Data; // Thư mục chứa file ApplicationDbContext của bạn
-using CMS.Data.Entities; // Thư mục chứa lớp thực thể Category
+using CMS.Data.Entities;
+using Microsoft.AspNetCore.Authorization;// Thư mục chứa lớp thực thể Category
 using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;

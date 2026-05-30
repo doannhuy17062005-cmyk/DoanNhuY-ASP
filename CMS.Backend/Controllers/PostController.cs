@@ -1,18 +1,23 @@
-﻿/* Sinh viên: Đoàn Như Ý
+﻿/*  Sinh viên: Đoàn Như Ý
 * MSSV: 2123110511
 * Lớp: CCQ2311M
-* Ngày sửa: 23/05/2026
-* Mô tả: Sử dụng kỹ thuật .Include() để nạp kèm dữ liệu danh mục (Category) tránh lỗi Null ở trang Index và Details
+* Ngày sửa: 30/05/2026
+* Mô tả: Controller quản lý bài viết gồm Index, Details, Create, Delete và Edit
 */
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using CMS.Data;
 using CMS.Data.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.IO;
+using System;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,32 +27,23 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int? id)
+        // Action hiển thị danh sách bài viết
+        public IActionResult Index()
         {
-            if (id == null)
-            {
-                var allPosts = _context.Posts
-                    .Include(p => p.Category)
-                    .OrderByDescending(p => p.CreatedDate)
-                    .ToList();
-
-                return View(allPosts);
-            }
-
             var posts = _context.Posts
-                        .Where(p => p.CategoryId == id)
-                        .OrderByDescending(p => p.CreatedDate)
-                        .Include(p => p.Category)
-                        .ToList();
+                                .Include(p => p.Category)
+                                .OrderByDescending(p => p.CreatedDate)
+                                .ToList();
 
             return View(posts);
         }
 
+        // Action Xem chi tiết bài viết
         public IActionResult Details(int id)
         {
             var post = _context.Posts
-                .Include(p => p.Category)
-                .FirstOrDefault(p => p.Id == id);
+                               .Include(p => p.Category)
+                               .FirstOrDefault(p => p.Id == id);
 
             if (post == null)
             {
@@ -57,6 +53,7 @@ namespace CMS.Backend.Controllers
             return View(post);
         }
 
+        // 1. Hàm hiển thị form tạo mới (GET)
         [HttpGet]
         public IActionResult Create()
         {
@@ -64,13 +61,14 @@ namespace CMS.Backend.Controllers
             return View();
         }
 
+        // 2. Hàm xử lý lưu bài viết (POST)
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Post model, IFormFile uploadImage)
         {
             if (uploadImage != null && uploadImage.Length > 0)
             {
                 string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
@@ -86,22 +84,23 @@ namespace CMS.Backend.Controllers
 
             _context.Posts.Add(model);
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
+        // 3. Hàm Xóa bài viết
         public IActionResult Delete(int id)
         {
             var post = _context.Posts.Find(id);
-
             if (post != null)
             {
                 _context.Posts.Remove(post);
                 _context.SaveChanges();
             }
-
             return RedirectToAction("Index");
         }
 
+        // 4. Hàm hiển thị form chỉnh sửa (GET)
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -112,7 +111,9 @@ namespace CMS.Backend.Controllers
             return View(post);
         }
 
+        // 5. Hàm xử lý cập nhật bài viết (POST)
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Post model, IFormFile uploadImage)
         {
             if (uploadImage != null && uploadImage.Length > 0)
@@ -127,16 +128,13 @@ namespace CMS.Backend.Controllers
                 {
                     uploadImage.CopyTo(stream);
                 }
-
                 model.ImageUrl = "/uploads/" + fileName;
             }
             else
             {
+                // Giữ lại ảnh cũ nếu không thay đổi ảnh
                 var oldPost = _context.Posts.AsNoTracking().FirstOrDefault(p => p.Id == model.Id);
-                if (oldPost != null && string.IsNullOrEmpty(model.ImageUrl))
-                {
-                    model.ImageUrl = oldPost.ImageUrl;
-                }
+                if (oldPost != null) model.ImageUrl = oldPost.ImageUrl;
             }
 
             _context.Posts.Update(model);

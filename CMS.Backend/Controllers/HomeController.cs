@@ -1,10 +1,9 @@
 ﻿/* Sinh viên: Đoàn Như Ý
-* MSSV: 2123110511
+*MSSV: 2123110511
 * Lớp: CCQ2311M
-* Ngày sửa: 29/05/2026
-* Mô tả: Tích hợp đầy đủ tính năng hiển thị danh sách, thêm mới, xóa có ràng buộc và cập nhật dữ liệu (Update) cho Danh mục
+* Ngày sửa: 29 / 05 / 2026
+* Mô tả: Tiêm DbContext và sử dụng cú pháp LINQ (OrderByDescending, Take) để lấy 3 bài viết mới nhất lên trang chủ
 */
-
 
 using CMS.Backend.Models;
 using Microsoft.AspNetCore.Mvc;
